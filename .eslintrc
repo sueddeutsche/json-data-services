@@ -1,0 +1,6 @@
+{
+    "extends": [
+        "eslint-config-sz/node",
+        "eslint-config-sz/sz_infografik"
+    ]
+}

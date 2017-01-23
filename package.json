@@ -1,0 +1,22 @@
+{
+  "name": "json-data-services",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "gson-pointer": "^1.0.4",
+    "json-schema-library": "^1.0.1",
+    "redux": "^3.6.0",
+    "with-observable": "^1.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^3.10.2",
+    "eslint-config-sz": "^3.10.2"
+  }
+}
