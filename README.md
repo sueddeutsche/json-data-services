@@ -10,9 +10,11 @@ Data can only be changed via the data-service methods. Each state is tracked wit
 ### Data manipulation methods
 
 ```js
-DataService.delete(pointer, data);
 DataService.get(pointer);
 DataService.set(pointer, data);
+DataService.delete(pointer, data);
+DataService.undo();
+DataService.redo();
 ```
 
 ### DataService events

@@ -8,45 +8,66 @@ describe("DataService", () => {
         service = new DataService();
     });
 
-    it("should store given data", () => {
-        service.set("#", { id: "storeme" });
+    describe("set/get", () => {
 
-        const data = service.get("#");
+        it("should store given data", () => {
+            service.set("#", { id: "storeme" });
 
-        expect(data).to.deep.eq({ id: "storeme" });
+            const data = service.get("#");
+
+            expect(data).to.deep.eq({ id: "storeme" });
+        });
+
+        it("should store copy of data", () => {
+            const data = { item: { id: "original" } };
+            service.set("#", data);
+
+            data.item.id = "modified";
+
+            expect(service.get("#")).to.deep.equal({ item: { id: "original" } });
+        });
+
+        it("should update nested value", () => {
+            const data = { item: { id: "original" } };
+            service.set("#", data);
+
+            service.set("#/item/label", "modified");
+
+            expect(service.get("#")).to.deep.equal({ item: { id: "original", label: "modified" } });
+        });
+
+        it("should throw if pointer has no parent value", () => {
+            service.set("#", {});
+
+            expect(() => service.set("#/invalid/path", "will not be set")).to.throw(Error);
+        });
+
+        it("should return nested data", () => {
+            const data = { item: { id: "original" } };
+            service.set("#", data);
+
+            const result = service.get("#/item/id");
+
+            expect(result).to.eq("original");
+        });
     });
 
-    it("should store copy of data", () => {
-        const data = { item: { id: "original" } };
-        service.set("#", data);
+    describe("delete", () => {
 
-        data.item.id = "modified";
+        let data;
 
-        expect(service.get("#")).to.deep.equal({ item: { id: "original" } });
-    });
+        beforeEach(() => {
+            data = { item: { id: "original" }, root: true };
+            service.set("#", data);
+        });
 
-    it("should update nested value", () => {
-        const data = { item: { id: "original" } };
-        service.set("#", data);
+        it("should remove value at given pointer", () => {
 
-        service.set("#/item/label", "modified");
+            service.delete("#/item/id");
 
-        expect(service.get("#")).to.deep.equal({ item: { id: "original", label: "modified" } });
-    });
-
-    it("should throw if pointer has no parent value", () => {
-        service.set("#", {});
-
-        expect(() => service.set("#/invalid/path", "will not be set")).to.throw(Error);
-    });
-
-    it("should return nested data", () => {
-        const data = { item: { id: "original" } };
-        service.set("#", data);
-
-        const result = service.get("#/item/id");
-
-        expect(result).to.eq("original");
+            const result = service.get("#");
+            expect(result).to.deep.equal({ item: {}, root: true });
+        });
     });
 
     describe("undo/redo", () => {
@@ -62,6 +83,15 @@ describe("DataService", () => {
             service.set("#/item/id", "modified");
             expect(service.get("#/item/id")).to.eq("modified");
 
+            service.undo();
+
+            const result = service.get("#/item/id");
+            expect(result).to.eq("original");
+        });
+
+        it("should restore deleted value", () => {
+            service.delete("#/item/id");
+            expect(service.get("#/item/id")).to.eq(undefined);
             service.undo();
 
             const result = service.get("#/item/id");
