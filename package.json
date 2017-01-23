@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --recursive 'test/**/*.test.js' -R spec; exit 0",
+    "tdd": "watch 'npm run test' lib/ test/; exit 0"
   },
   "keywords": [],
   "author": "",
@@ -12,11 +13,15 @@
   "dependencies": {
     "gson-pointer": "^1.0.4",
     "json-schema-library": "^1.0.1",
+    "mitt": "^1.0.1",
     "redux": "^3.6.0",
     "with-observable": "^1.0.1"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "eslint": "^3.10.2",
-    "eslint-config-sz": "^3.10.2"
+    "eslint-config-sz": "^3.10.2",
+    "mocha": "^3.2.0",
+    "watch": "^1.0.1"
   }
 }

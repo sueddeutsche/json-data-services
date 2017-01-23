@@ -1,6 +1,8 @@
 {
     "extends": [
         "eslint-config-sz/node",
-        "eslint-config-sz/sz_infografik"
+        "eslint-config-sz/es6",
+        "eslint-config-sz/sz_infografik",
+        "eslint-config-sz/sz_infografik/es6"
     ]
 }
