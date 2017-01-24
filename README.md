@@ -64,4 +64,3 @@ ValidationService.on("beforeValidate", callback)    // called before a next vali
 ValidationService.on("afterValidate", callback)     // called after validation - used to remove errors
 ValidationService.observe(pointer, callback) // Validation Events bubble up to root pointer (#)
 ```
-
