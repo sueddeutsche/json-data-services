@@ -17,24 +17,24 @@ dataService.get("#/content/header/title");
 
 ```js
 // Set data at given path
-DataService.set(pointer, data);
+dataService.set(pointer, data);
 // Set data at given path
-DataService.delete(pointer, data);
+dataService.delete(pointer, data);
 // Set last set/delete action
-DataService.undo();
+dataService.undo();
 // redo last undo action
-DataService.redo();
+dataService.redo();
 ```
 
 ### DataService events
 
 ```js
 // called before any data changes of the action
-DataService.on("beforeUpdate", callback)
+dataService.on("beforeUpdate", callback)
 // called after data changes, before observe events 
-DataService.on("afterUpdate", callback) 
+dataService.on("afterUpdate", callback) 
 // Events bubble up to root pointer (#), # is last event
-DataService.observe(pointer, callback) 
+dataService.observe(pointer, callback) 
 ```
 
 
@@ -60,7 +60,17 @@ function callback(event) {}
 Sends error notifications on changed data.
 
 ```js
-ValidationService.on("beforeValidate", callback)    // called before a next validation - used to remove errors
-ValidationService.on("afterValidate", callback)     // called after validation - used to remove errors
-ValidationService.observe(pointer, callback) // Validation Events bubble up to root pointer (#)
+// create a new data validation service
+const validationService = new ValidationService(jsonSchema)
+```
+
+```js
+// called before a next validation
+validationService.on("beforeValidation", callback)     
+// Validation Events bubble up to root pointer (#)
+validationService.observe(pointer, callback)   
+// called after notifying observers 
+validationService.on("afterValidation", callback)    
+// validate data
+validationService.validate(data).then((errors) => {})
 ```

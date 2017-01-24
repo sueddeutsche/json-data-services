@@ -3,7 +3,7 @@ const expect = require("chai").expect;
 const ValidationService = require("../lib/ValidationService");
 
 
-describe.only("ValidationService", () => {
+describe("ValidationService", () => {
 
     let schema;
     let service;
