@@ -19,6 +19,14 @@ describe("DataService", () => {
             expect(data).to.deep.eq({ id: "storeme" });
         });
 
+        it("should return root object by default", () => {
+            service.set("#", { id: "storeme" });
+
+            const data = service.get();
+
+            expect(data).to.deep.eq({ id: "storeme" });
+        });
+
         it("should store copy of data", () => {
             const data = { item: { id: "original" } };
             service.set("#", data);
