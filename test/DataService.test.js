@@ -1,3 +1,4 @@
+/* eslint object-property-newline: 0 */
 const expect = require("chai").expect;
 const DataService = require("../lib/DataService");
 
@@ -21,6 +22,15 @@ describe("DataService", () => {
         it("should store copy of data", () => {
             const data = { item: { id: "original" } };
             service.set("#", data);
+
+            data.item.id = "modified";
+
+            expect(service.get("#")).to.deep.equal({ item: { id: "original" } });
+        });
+
+        it("should return copy of data", () => {
+            service.set("#", { item: { id: "original" } });
+            const data = service.get("#");
 
             data.item.id = "modified";
 
@@ -67,6 +77,15 @@ describe("DataService", () => {
 
             const result = service.get("#");
             expect(result).to.deep.equal({ item: {}, root: true });
+        });
+
+        it("should remove item at given pointer", () => {
+            service.set("#/item/list", [0, 1, 2, 3]);
+
+            service.delete("#/item/list/2");
+
+            const result = service.get("#/item/list");
+            expect(result).to.deep.equal([0, 1, 3]);
         });
     });
 
