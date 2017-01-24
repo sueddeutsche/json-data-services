@@ -153,6 +153,11 @@ describe("DataService", () => {
 
     describe("events", () => {
 
+        it("should export events", () => {
+            expect(DataService.EVENTS).to.be.an("object");
+            expect(DataService.EVENTS.BEFORE_UPDATE).to.be.a("string");
+        });
+
         it("should emit 'beforeUpdate' event before applying data changes", () => {
             let event;
             service.on("beforeUpdate", (e) => {

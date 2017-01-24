@@ -71,6 +71,11 @@ describe("ValidationService", () => {
 
     describe("events", () => {
 
+        it("should export events", () => {
+            expect(ValidationService.EVENTS).to.be.an("object");
+            expect(ValidationService.EVENTS.BEFORE_VALIDATION).to.be.a("string");
+        });
+
         it("should emit 'beforeValidation' event before starting validation", () => {
             let called = false;
             service.on("beforeValidation", () => (called = true));
