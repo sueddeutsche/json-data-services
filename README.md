@@ -36,9 +36,9 @@ function callback(event) {}
 ```js
 // event object
 {
-    action: "delete", // oneOf ["delete", "add", "change"]
-    actionLocation: "#/pointer/location",
-    actionParent: "#/pointer",
+    action: "SET_DATA", // @see store/actions.ActionTypes
+    pointer: "#/pointer/location",
+    parentPointer: "#/pointer",
 }
 ```
 
