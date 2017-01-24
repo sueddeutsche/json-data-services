@@ -271,5 +271,17 @@ describe("DataService", () => {
 
             expect(called).to.eq(false);
         });
+
+        it("should remove observer", () => {
+            let called = false;
+            function cb() {
+                called = true;
+            }
+            service.observe("#/item", cb);
+            service.removeObserver("#/item", cb);
+            service.set("#/item/id", "modified");
+
+            expect(called).to.eq(false);
+        });
     });
 });
