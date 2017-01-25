@@ -1,3 +1,4 @@
+const chalk = require("chalk");
 const JsonService = require("../lib/JsonService");
 const service = new JsonService({
     type: "object",
@@ -11,8 +12,6 @@ const service = new JsonService({
     }
 });
 
-service.validationService.observe("#", (error) => console.log("error", error));
-service.redo = () => service.dataService.redo();
-service.undo = () => service.dataService.undo();
+service.validationService.observe("#", (error) => console.log(chalk.red(`error: ${error.message}`)));
 
 module.exports = service;
