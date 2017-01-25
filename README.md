@@ -1,9 +1,54 @@
-# json-data-services
+# JSON Data Services
 
-> Manages application state, especially tracks immutable json-editor-data and notifies about changes and errors.
+Combines multiple services to help working with json-data manipulation, synchronisation and validation.
+
+- The `DataService` manages application state and retrieval. Additional supports undo.
+- The `ValidationService` validates any data by a given JSON-schema.
+- The `SchemaService` returns the JSON-schema at the given JSON-pointer location
+- The `JsonService` wraps all services, starting data validation after data changes
+
+All services offer an interface based on [JSON-pointer](https://tools.ietf.org/html/rfc6901).
+ 
+
+## Services
+
+### JsonService
+
+```js
+const service = new JsonService(jsonSchema, jsonData);
+// returns data at json-pointer
+service.getData(jsonPointer);
+// returns json schema of stored data at json-pointer
+service.getSchema(jsonPointer);
+// updates data by given value at json-pointer
+service.setData(anyValue, jsonPointer);
+// remove data at json-pointer
+service.deleteData(jsonPointer)
+// undo last setData or deleteData action
+service.undo();
+// restore last undo
+service.redo();
+// sets json schema to use
+service.setSchema(jsonSchema)
+```
+
+Registering to events, is currently not wrapped by JsonService:
+
+```js
+// get each service to set events directly
+const dataService = service.data();
+dataService.observe("#/article/title", callback);
+dataService.on("beforeUpdate", callback);
+
+const validationService = service.data();
+validationService.observe("#/article/title", callback);
+validationService.on("beforeValidation", callback);
+```
+
+For further details checkout the individual services:
 
 
-## DataService
+### DataService
 
 Data can only be changed via the data-service methods. Each state is tracked within the services, enabling und/redo functionality (currently replaces complete data, enforcing an update event on root).
 
@@ -13,7 +58,7 @@ const dataService = new DataService(jsonData);
 dataService.get("#/content/header/title");
 ```
 
-### Data manipulation methods
+#### Data manipulation methods
 
 ```js
 // Set data at given path
@@ -26,7 +71,7 @@ dataService.undo();
 dataService.redo();
 ```
 
-### DataService events
+#### DataService events
 
 ```js
 // called before any data changes of the action
@@ -38,7 +83,7 @@ dataService.observe(pointer, callback)
 ```
 
 
-### Dataservice event object
+#### Dataservice event object
 
 ```js
 // callbacks
@@ -55,7 +100,7 @@ function callback(event) {}
 ```
 
 
-## ValidationService
+### ValidationService
 
 Sends error notifications on changed data.
 
