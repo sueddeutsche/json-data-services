@@ -1,6 +1,6 @@
 {
   "name": "json-data-services",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Json-data manipulation, synchronisation and validation services",
   "main": "index.js",
   "scripts": {
