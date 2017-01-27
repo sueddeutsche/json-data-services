@@ -46,7 +46,7 @@ describe("DataService", () => {
         });
 
         it("should update nested value", () => {
-            const data = { item: { id: "original" } };
+            const data = { item: { id: "original", label: "" } };
             service.set("#", data);
 
             service.set("#/item/label", "modified");
@@ -68,6 +68,12 @@ describe("DataService", () => {
 
             expect(() => service.set("#/invalid/path", "will not be set")).to.throw(Error);
         });
+
+        it("should throw if pointer is undefined", () => {
+            service.set("#", {});
+
+            expect(() => service.set("#/invalid", "will not be set")).to.throw(Error);
+        });
     });
 
     describe("delete", () => {
@@ -88,7 +94,7 @@ describe("DataService", () => {
         });
 
         it("should remove item at given pointer", () => {
-            service.set("#/item/list", [0, 1, 2, 3]);
+            service.set("#/item", { list: [0, 1, 2, 3] });
 
             service.delete("#/item/list/2");
 
