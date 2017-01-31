@@ -1,4 +1,4 @@
-/* eslint object-property-newline: 0 */
+/* eslint object-property-newline: 0, max-nested-callbacks: 0 */
 const expect = require("chai").expect;
 const DataService = require("../lib/DataService");
 
@@ -251,48 +251,61 @@ describe("DataService", () => {
             expect(called).to.eq(true);
         });
 
-        it("should notify of change at pointer", () => {
-            let called = false;
-            service.observe("#/item/id", () => (called = true));
-            service.set("#/item/id", "modified");
-
-            expect(called).to.eq(true);
-        });
-
-        it("should notify all parents of change", () => {
+        it("should not notify parents", () => {
             let called = false;
             service.observe("#/item", () => (called = true));
             service.set("#/item/id", "modified");
 
-            expect(called).to.eq(true);
-        });
-
-        it("should notify root of change", () => {
-            let called = false;
-            service.observe("#", () => (called = true));
-            service.set("#/item/id", "modified");
-
-            expect(called).to.eq(true);
-        });
-
-        it("should not notify observers on different trees", () => {
-            let called = false;
-            service.observe("#/item", () => (called = true));
-            service.set("#/other/id", "modified");
-
             expect(called).to.eq(false);
         });
 
-        it("should remove observer", () => {
-            let called = false;
-            function cb() {
-                called = true;
-            }
-            service.observe("#/item", cb);
-            service.removeObserver("#/item", cb);
-            service.set("#/item/id", "modified");
+        describe("bubble events", () => {
 
-            expect(called).to.eq(false);
+            const BUBBLE_EVENTS = true;
+
+            it("should notify of change at pointer", () => {
+                let called = false;
+                service.observe("#/item/id", () => (called = true), BUBBLE_EVENTS);
+                service.set("#/item/id", "modified");
+
+                expect(called).to.eq(true);
+            });
+
+            it("should notify all parents of change", () => {
+                let called = false;
+                service.observe("#/item", () => (called = true), BUBBLE_EVENTS);
+                service.set("#/item/id", "modified");
+
+                expect(called).to.eq(true);
+            });
+
+            it("should notify root of change", () => {
+                let called = false;
+                service.observe("#", () => (called = true), BUBBLE_EVENTS);
+                service.set("#/item/id", "modified");
+
+                expect(called).to.eq(true);
+            });
+
+            it("should not notify observers on different trees", () => {
+                let called = false;
+                service.observe("#/item", () => (called = true), BUBBLE_EVENTS);
+                service.set("#/other/id", "modified");
+
+                expect(called).to.eq(false);
+            });
+
+            it("should remove observer", () => {
+                let called = false;
+                function cb() {
+                    called = true;
+                }
+                service.observe("#/item", cb, BUBBLE_EVENTS);
+                service.removeObserver("#/item", cb);
+                service.set("#/item/id", "modified");
+
+                expect(called).to.eq(false);
+            });
         });
     });
 });
