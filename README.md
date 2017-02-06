@@ -79,7 +79,7 @@ dataService.on("beforeUpdate", callback)
 // called after data changes, before observe events 
 dataService.on("afterUpdate", callback) 
 // Events bubble up to root pointer (#), # is last event
-dataService.observe(pointer, callback) 
+dataService.observe(pointer, callback, true) 
 ```
 
 
@@ -113,7 +113,7 @@ const validationService = new ValidationService(jsonSchema)
 // called before a next validation
 validationService.on("beforeValidation", callback)     
 // Validation Events bubble up to root pointer (#)
-validationService.observe(pointer, callback)   
+validationService.observe(pointer, callback, true)   
 // called after notifying observers 
 validationService.on("afterValidation", callback)    
 // validate data
