@@ -230,7 +230,7 @@ describe("DataService", () => {
             expect(event).to.be.an("object");
             expect(event.pointer).to.eq("#/id");
             expect(event.parentPointer).to.eq("#");
-            expect(event.action).to.eq("SET_DATA");
+            expect(event.action).to.eq("DATA_SET");
         });
     });
 
