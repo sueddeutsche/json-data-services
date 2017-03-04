@@ -129,6 +129,7 @@ describe("DataService", () => {
         it("should restore deleted value", () => {
             service.delete("#/item/id");
             expect(service.get("#/item/id")).to.eq(undefined);
+
             service.undo();
 
             const result = service.get("#/item/id");
@@ -141,6 +142,7 @@ describe("DataService", () => {
             expect(service.get("#/item/id")).to.eq("original");
 
             service.redo();
+
             const result = service.get("#/item/id");
             expect(result).to.eq("modified");
         });
@@ -152,6 +154,7 @@ describe("DataService", () => {
             expect(service.get("#/item/id")).to.eq("latest");
 
             service.redo();
+
             const result = service.get("#/item/id");
             expect(result).to.eq("latest");
         });
