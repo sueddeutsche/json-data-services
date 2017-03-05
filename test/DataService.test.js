@@ -107,7 +107,7 @@ describe("DataService", () => {
         });
     });
 
-    describe("undo/redo", () => {
+    describe.only("undo/redo", () => {
 
         let data;
 
@@ -157,6 +157,16 @@ describe("DataService", () => {
 
             const result = service.get("#/item/id");
             expect(result).to.eq("latest");
+        });
+
+        it("should not update states from unknown actions", () => {
+            const state = require("../lib/state");
+            const undoStepsBefore = state.get(service.id).data.past.length;
+
+            state.dispatch({ type: "TEST_ACTION", value: 14 });
+            const undoStepsAfter = state.get(service.id).data.past.length;
+
+            expect(undoStepsBefore).to.eq(undoStepsAfter);
         });
     });
 
