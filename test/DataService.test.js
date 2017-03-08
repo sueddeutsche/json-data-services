@@ -168,6 +168,53 @@ describe("DataService", () => {
 
             expect(undoStepsBefore).to.eq(undoStepsAfter);
         });
+
+        it("should not update parent pointer for a single changed value", () => {
+            let updatedRoot = false;
+            let updatedParent = false;
+            let updatedValue = false;
+            service.set("#/item/id", "modified");
+            service.observe("#", () => (updatedRoot = true));
+            service.observe("#/item", () => (updatedParent = true));
+            service.observe("#/item/id", () => (updatedValue = true));
+            service.undo();
+
+            expect(updatedRoot).to.eq(false);
+            expect(updatedParent).to.eq(false, "parent pointer should not have been notified");
+            expect(updatedValue).to.eq(true);
+        });
+
+        it("should update parent pointer if data has been added", () => {
+            let updatedRoot = false;
+            let updatedParent = false;
+            let updatedValue = false;
+            service.set("#/item", [1, 2, 3, 4, 5]);
+            service.set("#/item", [1, 2, 3, 4, 5, 6]);
+            service.observe("#", () => (updatedRoot = true));
+            service.observe("#/item", () => (updatedParent = true));
+            service.observe("#/item/2", () => (updatedValue = true));
+            service.undo();
+
+            expect(updatedRoot).to.eq(false, "root pointer should not have been notified");
+            expect(updatedParent).to.eq(true, "parent pointer should have been notified");
+            expect(updatedValue).to.eq(false);
+        });
+
+        it("should update parent pointer if data has been removed", () => {
+            let updatedRoot = false;
+            let updatedParent = false;
+            let updatedValue = false;
+            service.set("#/item", [1, 2, 3, 4, 5]);
+            service.set("#/item", [1, 2, 3, 5]);
+            service.observe("#", () => (updatedRoot = true));
+            service.observe("#/item", () => (updatedParent = true));
+            service.observe("#/item/2", () => (updatedValue = true));
+            service.undo();
+
+            expect(updatedRoot).to.eq(false, "root pointer should not have been notified");
+            expect(updatedParent).to.eq(true, "parent pointer should have been notified");
+            expect(updatedValue).to.eq(false);
+        });
     });
 
     describe("events", () => {

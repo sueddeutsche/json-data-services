@@ -14,6 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "deep-diff": "^0.3.4",
     "gson-pointer": "^1.0.4",
     "json-schema-library": "^1.0.1",
     "mitt": "^1.0.1",
