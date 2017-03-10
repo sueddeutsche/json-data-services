@@ -318,6 +318,14 @@ describe("DataService", () => {
             expect(called).to.eq(false);
         });
 
+        it("should also pass type of modified data", () => {
+            let event;
+            service.observe("#/item/id", (e) => (event = e));
+            service.set("#/item/id", "modified");
+
+            expect(event.type).to.eq("string");
+        });
+
         describe("bubble events", () => {
 
             const BUBBLE_EVENTS = true;
