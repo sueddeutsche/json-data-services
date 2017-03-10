@@ -107,7 +107,7 @@ describe("DataService", () => {
         });
     });
 
-    describe.only("undo/redo", () => {
+    describe("undo/redo", () => {
 
         let data;
 
@@ -181,7 +181,7 @@ describe("DataService", () => {
 
             expect(updatedRoot).to.eq(false);
             expect(updatedParent).to.eq(false, "parent pointer should not have been notified");
-            expect(updatedValue).to.eq(true);
+            expect(updatedValue).to.eq(true, "should have updated pointer at value");
         });
 
         it("should update parent pointer if data has been added", () => {
@@ -290,7 +290,6 @@ describe("DataService", () => {
             expect(event).to.be.an("object");
             expect(event.pointer).to.eq("#/id");
             expect(event.parentPointer).to.eq("#");
-            expect(event.action).to.eq("DATA_SET");
         });
     });
 
