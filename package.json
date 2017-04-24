@@ -16,7 +16,7 @@
   "dependencies": {
     "deep-diff": "^0.3.4",
     "gson-pointer": "^1.0.4",
-    "json-schema-library": "^1.0.1",
+    "json-schema-library": "sagold/json-schema-library#develop",
     "mitt": "^1.0.1",
     "redux": "^3.6.0",
     "redux-undo": "^0.6.1",
