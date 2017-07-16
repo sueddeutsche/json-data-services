@@ -14,9 +14,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "deep-diff": "^0.3.4",
     "gson-pointer": "^1.0.4",
     "json-schema-library": "sagold/json-schema-library#develop",
+    "jsondiffpatch": "^0.2.4",
     "mitt": "^1.0.1",
     "redux": "^3.6.0",
     "redux-undo": "^0.6.1",
