@@ -1,12 +1,12 @@
 /* eslint object-property-newline: 0, max-nested-callbacks: 0 */
 const expect = require("chai").expect;
-const getEventLocation = require("../../lib/utils/getEventLocation");
+const getChangeLocation = require("../../lib/utils/getChangeLocation");
 
 
-describe("utils.getEventLocation", () => {
+describe("utils.getChangeLocation", () => {
 
     it("should return json-pointer of change location", () => {
-        const pointer = getEventLocation(
+        const pointer = getChangeLocation(
             { a: [{ change: "here" }] },
             { a: [{ change: "here!" }] }
         );
@@ -15,7 +15,7 @@ describe("utils.getEventLocation", () => {
     });
 
     it("should return common path of multiple changes", () => {
-        const pointer = getEventLocation({
+        const pointer = getChangeLocation({
             common: {
                 a: {
                     title: "oh"
@@ -39,7 +39,7 @@ describe("utils.getEventLocation", () => {
     });
 
     it("should return pointer to item for a modification", () => {
-        const pointer = getEventLocation(
+        const pointer = getChangeLocation(
             { an: [{ item: "before" }] },
             { an: [{ item: "after" }] }
         );
@@ -48,7 +48,7 @@ describe("utils.getEventLocation", () => {
     });
 
     it("should return pointer to array for added items", () => {
-        const pointer = getEventLocation(
+        const pointer = getChangeLocation(
             { an: [{ item: "here" }] },
             { an: [{ item: "here" }, { item: "added" }] }
         );
@@ -57,7 +57,7 @@ describe("utils.getEventLocation", () => {
     });
 
     it("should return pointer to array for removed items", () => {
-        const pointer = getEventLocation(
+        const pointer = getChangeLocation(
             { an: [{ item: "here" }, { item: "added" }] },
             { an: [{ item: "here" }] }
         );
@@ -66,7 +66,7 @@ describe("utils.getEventLocation", () => {
     });
 
     it("should return pointer to item for modified property", () => {
-        const pointer = getEventLocation(
+        const pointer = getChangeLocation(
             { an: { object: { withAKey: "before" } } },
             { an: { object: { withAKey: "after" } } }
         );
@@ -75,7 +75,7 @@ describe("utils.getEventLocation", () => {
     });
 
     it("should return pointer to object for a added property", () => {
-        const pointer = getEventLocation(
+        const pointer = getChangeLocation(
             { an: { object: { } } },
             { an: { object: { withAKey: "" } } }
         );
@@ -84,7 +84,7 @@ describe("utils.getEventLocation", () => {
     });
 
     it("should return pointer to object for removed property", () => {
-        const pointer = getEventLocation(
+        const pointer = getChangeLocation(
             { an: { object: { withAKey: "" } } },
             { an: { object: { } } }
         );
