@@ -7,8 +7,8 @@ describe("utils.getChangeLocation", () => {
 
     it("should return json-pointer of change location", () => {
         const pointer = getChangeLocation(
-            { a: [{ change: "here" }] },
-            { a: [{ change: "here!" }] }
+            { a: [{ change: "here", _id: 0 }] },
+            { a: [{ change: "here!", _id: 0 }] }
         );
 
         expect(pointer).to.equal("#/a/0/change");
@@ -40,8 +40,8 @@ describe("utils.getChangeLocation", () => {
 
     it("should return pointer to item for a modification", () => {
         const pointer = getChangeLocation(
-            { an: [{ item: "before" }] },
-            { an: [{ item: "after" }] }
+            { an: [{ item: "before", _id: 0 }] },
+            { an: [{ item: "after", _id: 0 }] }
         );
 
         expect(pointer).to.equal("#/an/0/item");
