@@ -14,12 +14,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "diffsync": "^2.1.2",
     "gson-pointer": "^2.1.1",
     "json-schema-library": "sagold/json-schema-library#develop",
     "jsondiffpatch": "^0.2.4",
     "mitt": "^1.0.1",
     "redux": "^3.6.0",
     "redux-undo": "^0.6.1",
+    "socket.io-client": "^2.0.3",
     "with-observable": "^1.0.1"
   },
   "devDependencies": {
