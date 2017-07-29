@@ -38,7 +38,7 @@ describe("utils.getChangeDetails", () => {
             { a: [{ change: "first", _id: 0 }, { change: "inserted", _id: 2 }, { change: "second", _id: 3 }] }
         );
 
-        expect(changes).to.deep.equal({ added: ["1", "2"], removed: ["1"] });
+        expect(changes).to.deep.equal({ added: ["1", "2"], removed: ["1"], moved: {} });
     });
 
     it("should return moved indices", () => {
@@ -66,6 +66,15 @@ describe("utils.getChangeDetails", () => {
         );
 
         expect(changes).to.deep.equal({ added: ["b2"] });
+    });
+
+    it("should return all changes with unique indices", () => {
+        const changes = getChangeDetails(
+            { a: [{ change: "first", _id: 0 }, { change: "second", _id: 1 }, { change: "third", _id: 2 }] },
+            { a: [{ change: "new", _id: 3 }, { change: "third", _id: 2 }, { change: "first", _id: 0 }] }
+        );
+
+        expect(changes).to.deep.equal({ added: ["0"], removed: ["1"], moved: { "2": "1" } });
     });
 });
 
