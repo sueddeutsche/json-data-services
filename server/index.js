@@ -1,13 +1,14 @@
-const PORT = process.env.PORT || 3000;
-const server = require("restify").createServer();
 const http = require("http");
+const server = require("restify").createServer();
 const socketio = require("socket.io");
 const JsonSync = require("json-sync");
 const InMemoryDataAdapter = require("json-sync/src/adapter/InMemoryDataAdapter");
 
-// setting up the diffsync server
-const jsonSyncServer = new JsonSync.Server(new InMemoryDataAdapter(), socketio.listen(server.server));
+const PORT = process.env.PORT || 3000;
 
+// setting up the diffsync server
+// eslint-disable-next-line no-unused-vars
+const jsonSyncServer = new JsonSync.Server(new InMemoryDataAdapter(), socketio.listen(server.server));
 
 // starting the http server
 server.listen(PORT, () => {
