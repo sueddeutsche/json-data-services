@@ -1,6 +1,6 @@
 /* eslint object-property-newline: 0, max-nested-callbacks: 0 */
 const expect = require("chai").expect;
-const State = require("../lib/state").StateConstructor;
+const State = require("../lib/state");
 
 
 describe("state", () => {
@@ -12,8 +12,8 @@ describe("state", () => {
     });
 
     it("should return a unique id", () => {
-        const first = state.createId("data");
-        const second = state.createId("data");
+        const first = State.createId("data");
+        const second = State.createId("data");
 
         expect(first).to.not.eq(second);
     });

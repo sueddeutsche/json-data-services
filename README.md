@@ -5,47 +5,11 @@ Combines multiple services to help working with json-data manipulation, synchron
 - The `DataService` manages application state and retrieval. Additional supports undo.
 - The `ValidationService` validates any data by a given JSON-schema.
 - The `SchemaService` returns the JSON-schema at the given JSON-pointer location
-- The `JsonService` wraps all services, starting data validation after data changes
 
 All services offer an interface based on [JSON-pointer](https://tools.ietf.org/html/rfc6901).
- 
+
 
 ## Services
-
-### JsonService
-
-```js
-const service = new JsonService(jsonSchema, jsonData);
-// returns data at json-pointer
-service.getData(jsonPointer);
-// returns json schema of stored data at json-pointer
-service.getSchema(jsonPointer);
-// updates data by given value at json-pointer
-service.setData(anyValue, jsonPointer);
-// remove data at json-pointer
-service.deleteData(jsonPointer)
-// undo last setData or deleteData action
-service.undo();
-// restore last undo
-service.redo();
-// sets json schema to use
-service.setSchema(jsonSchema)
-```
-
-Registering to events, is currently not wrapped by JsonService:
-
-```js
-// get each service to set events directly
-const dataService = service.data();
-dataService.observe("#/article/title", callback);
-dataService.on("beforeUpdate", callback);
-
-const validationService = service.data();
-validationService.observe("#/article/title", callback);
-validationService.on("beforeValidation", callback);
-```
-
-For further details checkout the individual services:
 
 
 ### DataService

@@ -3,7 +3,7 @@ const gp = require("gson-pointer");
 const diffpatch = require("../../lib/utils/diffpatch");
 const getPatchesPerPointer = require("../../lib/utils/getPatchesPerPointer");
 
-describe.only("getPatchesPerPointer", () => {
+describe("getPatchesPerPointer", () => {
 
     it("should return empty array if data is the same", () => {
         const result = getPatchesPerPointer({ a: "prop" }, { a: "prop" });

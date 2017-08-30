@@ -1,12 +1,15 @@
 /* eslint object-property-newline: 0, max-nested-callbacks: 0 */
 const expect = require("chai").expect;
 const DataService = require("../lib/DataService");
+const State = require("../lib/State");
 
 
 describe("DataService", () => {
     let service;
+    let state;
     beforeEach(() => {
-        service = new DataService();
+        state = new State();
+        service = new DataService(state);
     });
 
     describe("set/get", () => {
@@ -160,7 +163,6 @@ describe("DataService", () => {
         });
 
         it("should not update states from unknown actions", () => {
-            const state = require("../lib/state");
             const undoStepsBefore = state.get(service.id).data.past.length;
 
             state.dispatch({ type: "TEST_ACTION", value: 14 });
@@ -373,6 +375,17 @@ describe("DataService", () => {
 
                 expect(called).to.eq(false);
             });
+        });
+    });
+
+    describe("multiple instances", () => {
+
+        it("should not set data on other DataServices", () => {
+            service.set("#", { title: "service1" });
+            const service2 = new DataService(new State());
+            service2.set("#", { title: "service2" });
+
+            expect(service.get("#/title")).to.eq("service1");
         });
     });
 });

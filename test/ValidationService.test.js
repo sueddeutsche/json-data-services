@@ -1,14 +1,17 @@
 /* eslint object-property-newline: 0, max-nested-callbacks: 0 */
 const expect = require("chai").expect;
+const State = require("../lib/State");
 const ValidationService = require("../lib/ValidationService");
 
 
 describe("ValidationService", () => {
 
+    let state;
     let schema;
     let service;
 
     beforeEach(() => {
+        state = new State();
         schema = {
             type: "object",
             properties: {
@@ -20,7 +23,7 @@ describe("ValidationService", () => {
                 }
             }
         };
-        service = new ValidationService(schema);
+        service = new ValidationService(state, schema);
     });
 
     it("should store json schema", () => {
