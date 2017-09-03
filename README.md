@@ -14,11 +14,11 @@ All services offer an interface based on [JSON-pointer](https://tools.ietf.org/h
 
 ### DataService
 
-Data can only be changed via the data-service methods. Each state is tracked within the services, enabling und/redo functionality (currently replaces complete data, enforcing an update event on root).
+Data can only be changed via the data-service methods. Each state is tracked within the services, enabling und/redo functionality.
 
 ```js
 // get data at json-pointer
-const dataService = new DataService(jsonData);
+const dataService = new DataService(new State(), jsonData);
 dataService.get("#/content/header/title");
 ```
 
@@ -70,7 +70,7 @@ Sends error notifications on changed data.
 
 ```js
 // create a new data validation service
-const validationService = new ValidationService(jsonSchema)
+const validationService = new ValidationService(new State(), jsonSchema)
 ```
 
 ```js

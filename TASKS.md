@@ -1,2 +1,0 @@
-- [✓] analyse deeper integratation of json diffs
-- [ ] refactor patchArray & changeDetails in updateEvent to use diff-patch per pointer
