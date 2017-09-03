@@ -11,13 +11,6 @@ describe("state", () => {
         state = new State();
     });
 
-    it("should return a unique id", () => {
-        const first = State.createId("data");
-        const second = State.createId("data");
-
-        expect(first).to.not.eq(second);
-    });
-
     it("should dispatch action", () => {
         let calledAction;
         function reducer(state = {}, action) {
