@@ -1,12 +1,15 @@
-/* eslint object-property-newline: 0 */
+/* eslint object-property-newline: 0, max-nested-callbacks: 0 */
 const expect = require("chai").expect;
 const DataService = require("../lib/DataService");
+const State = require("../lib/State");
 
 
 describe("DataService", () => {
     let service;
+    let state;
     beforeEach(() => {
-        service = new DataService();
+        state = new State();
+        service = new DataService(state);
     });
 
     describe("set/get", () => {
@@ -46,7 +49,7 @@ describe("DataService", () => {
         });
 
         it("should update nested value", () => {
-            const data = { item: { id: "original" } };
+            const data = { item: { id: "original", label: "" } };
             service.set("#", data);
 
             service.set("#/item/label", "modified");
@@ -68,6 +71,12 @@ describe("DataService", () => {
 
             expect(() => service.set("#/invalid/path", "will not be set")).to.throw(Error);
         });
+
+        it("should throw if pointer is undefined", () => {
+            service.set("#", {});
+
+            expect(() => service.set("#/invalid", "will not be set")).to.throw(Error);
+        });
     });
 
     describe("delete", () => {
@@ -88,7 +97,7 @@ describe("DataService", () => {
         });
 
         it("should remove item at given pointer", () => {
-            service.set("#/item/list", [0, 1, 2, 3]);
+            service.set("#/item", { list: [0, 1, 2, 3] });
 
             service.delete("#/item/list/2");
 
@@ -123,6 +132,7 @@ describe("DataService", () => {
         it("should restore deleted value", () => {
             service.delete("#/item/id");
             expect(service.get("#/item/id")).to.eq(undefined);
+
             service.undo();
 
             const result = service.get("#/item/id");
@@ -135,6 +145,7 @@ describe("DataService", () => {
             expect(service.get("#/item/id")).to.eq("original");
 
             service.redo();
+
             const result = service.get("#/item/id");
             expect(result).to.eq("modified");
         });
@@ -146,8 +157,65 @@ describe("DataService", () => {
             expect(service.get("#/item/id")).to.eq("latest");
 
             service.redo();
+
             const result = service.get("#/item/id");
             expect(result).to.eq("latest");
+        });
+
+        it("should not update states from unknown actions", () => {
+            const undoStepsBefore = state.get(service.id).data.past.length;
+
+            state.dispatch({ type: "TEST_ACTION", value: 14 });
+            const undoStepsAfter = state.get(service.id).data.past.length;
+
+            expect(undoStepsBefore).to.eq(undoStepsAfter);
+        });
+
+        it("should not update parent pointer for a single changed value", () => {
+            let updatedRoot = false;
+            let updatedParent = false;
+            let updatedValue = false;
+            service.set("#/item/id", "modified");
+            service.observe("#", () => (updatedRoot = true));
+            service.observe("#/item", () => (updatedParent = true));
+            service.observe("#/item/id", () => (updatedValue = true));
+            service.undo();
+
+            expect(updatedRoot).to.eq(false);
+            expect(updatedParent).to.eq(false, "parent pointer should not have been notified");
+            expect(updatedValue).to.eq(true, "should have updated pointer at value");
+        });
+
+        it("should update parent pointer if data has been added", () => {
+            let updatedRoot = false;
+            let updatedParent = false;
+            let updatedValue = false;
+            service.set("#/item", [1, 2, 3, 4, 5]);
+            service.set("#/item", [1, 2, 3, 4, 5, 6]);
+            service.observe("#", () => (updatedRoot = true));
+            service.observe("#/item", () => (updatedParent = true));
+            service.observe("#/item/2", () => (updatedValue = true));
+            service.undo();
+
+            expect(updatedRoot).to.eq(false, "root pointer should not have been notified");
+            expect(updatedParent).to.eq(true, "parent pointer should have been notified");
+            expect(updatedValue).to.eq(false);
+        });
+
+        it("should update parent pointer if data has been removed", () => {
+            let updatedRoot = false;
+            let updatedParent = false;
+            let updatedValue = false;
+            service.set("#/item", [1, 2, 3, 4, 5]);
+            service.set("#/item", [1, 2, 3, 5]);
+            service.observe("#", () => (updatedRoot = true));
+            service.observe("#/item", () => (updatedParent = true));
+            service.observe("#/item/2", () => (updatedValue = true));
+            service.undo();
+
+            expect(updatedRoot).to.eq(false, "root pointer should not have been notified");
+            expect(updatedParent).to.eq(true, "parent pointer should have been notified");
+            expect(updatedValue).to.eq(false);
         });
     });
 
@@ -224,7 +292,6 @@ describe("DataService", () => {
             expect(event).to.be.an("object");
             expect(event.pointer).to.eq("#/id");
             expect(event.parentPointer).to.eq("#");
-            expect(event.action).to.eq("SET_DATA");
         });
     });
 
@@ -245,48 +312,80 @@ describe("DataService", () => {
             expect(called).to.eq(true);
         });
 
-        it("should notify of change at pointer", () => {
-            let called = false;
-            service.observe("#/item/id", () => (called = true));
-            service.set("#/item/id", "modified");
-
-            expect(called).to.eq(true);
-        });
-
-        it("should notify all parents of change", () => {
+        it("should not notify parents", () => {
             let called = false;
             service.observe("#/item", () => (called = true));
             service.set("#/item/id", "modified");
 
-            expect(called).to.eq(true);
-        });
-
-        it("should notify root of change", () => {
-            let called = false;
-            service.observe("#", () => (called = true));
-            service.set("#/item/id", "modified");
-
-            expect(called).to.eq(true);
-        });
-
-        it("should not notify observers on different trees", () => {
-            let called = false;
-            service.observe("#/item", () => (called = true));
-            service.set("#/other/id", "modified");
-
             expect(called).to.eq(false);
         });
 
-        it("should remove observer", () => {
-            let called = false;
-            function cb() {
-                called = true;
-            }
-            service.observe("#/item", cb);
-            service.removeObserver("#/item", cb);
+        it("should also pass type of modified data", () => {
+            let event;
+            service.observe("#/item/id", (e) => (event = e));
             service.set("#/item/id", "modified");
 
-            expect(called).to.eq(false);
+            expect(event.type).to.eq("string");
+        });
+
+        describe("bubble events", () => {
+
+            const BUBBLE_EVENTS = true;
+
+            it("should notify of change at pointer", () => {
+                let called = false;
+                service.observe("#/item/id", () => (called = true), BUBBLE_EVENTS);
+                service.set("#/item/id", "modified");
+
+                expect(called).to.eq(true);
+            });
+
+            it("should notify all parents of change", () => {
+                let called = false;
+                service.observe("#/item", () => (called = true), BUBBLE_EVENTS);
+                service.set("#/item/id", "modified");
+
+                expect(called).to.eq(true);
+            });
+
+            it("should notify root of change", () => {
+                let called = false;
+                service.observe("#", () => (called = true), BUBBLE_EVENTS);
+                service.set("#/item/id", "modified");
+
+                expect(called).to.eq(true);
+            });
+
+            it("should not notify observers on different trees", () => {
+                let called = false;
+                service.observe("#/item", () => (called = true), BUBBLE_EVENTS);
+                service.set("#/other/id", "modified");
+
+                expect(called).to.eq(false);
+            });
+
+            it("should remove observer", () => {
+                let called = false;
+                function cb() {
+                    called = true;
+                }
+                service.observe("#/item", cb, BUBBLE_EVENTS);
+                service.removeObserver("#/item", cb);
+                service.set("#/item/id", "modified");
+
+                expect(called).to.eq(false);
+            });
+        });
+    });
+
+    describe("multiple instances", () => {
+
+        it("should not set data on other DataServices", () => {
+            service.set("#", { title: "service1" });
+            const service2 = new DataService(new State());
+            service2.set("#", { title: "service2" });
+
+            expect(service.get("#/title")).to.eq("service1");
         });
     });
 });
