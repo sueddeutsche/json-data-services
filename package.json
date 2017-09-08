@@ -23,7 +23,7 @@
     "redux": "^3.6.0",
     "redux-undo": "^0.6.1",
     "socket.io-client": "^2.0.3",
-    "with-observable": "^1.0.1"
+    "with-observable": "^1.2.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
