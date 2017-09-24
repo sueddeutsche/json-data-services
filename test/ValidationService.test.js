@@ -33,7 +33,7 @@ describe("ValidationService", () => {
 
     it("should validate data by json schema", () => service
         .validate({ title: "test", chapter: 1, modules: [] })
-        .then((errors) => expect(errors).to.have.lengthOf(0))
+            .then((errors) => expect(errors).to.have.lengthOf(0))
     );
 
     it("should pass errors for invalid data", () => service
