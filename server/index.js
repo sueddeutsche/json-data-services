@@ -7,8 +7,9 @@ const InMemoryDataAdapter = require("json-sync/src/adapter/InMemoryDataAdapter")
 const PORT = process.env.PORT || 62019;
 
 // setting up the diffsync server
+const transport = socketio.listen(server.server);
 // eslint-disable-next-line no-unused-vars
-const jsonSyncServer = new JsonSync.Server(new InMemoryDataAdapter(), socketio.listen(server.server));
+const jsonSyncServer = new JsonSync.Server(new InMemoryDataAdapter(), transport);
 
 // starting the http server
 server.listen(PORT, () => {
