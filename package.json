@@ -1,6 +1,6 @@
 {
   "name": "json-data-services",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Json-data manipulation, synchronisation and validation services",
   "main": "lib/index.js",
   "scripts": {
@@ -18,8 +18,8 @@
   "license": "ISC",
   "dependencies": {
     "diff_match_patch": "^0.1.1",
-    "gson-pointer": "^3.2.0",
-    "json-schema-library": "^2.3.1",
+    "gson-pointer": "^3.2.1",
+    "json-schema-library": "^3.3.1",
     "jsondiffpatch": "^0.2.4",
     "mitt": "^1.0.1",
     "redux": "^3.6.0",
