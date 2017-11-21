@@ -18,7 +18,7 @@
   "license": "ISC",
   "dependencies": {
     "diff_match_patch": "^0.1.1",
-    "gson-pointer": "^3.4.0",
+    "gson-pointer": "^3.4.1",
     "json-schema-library": "^3.3.1",
     "jsondiffpatch": "^0.2.4",
     "mitt": "^1.0.1",
